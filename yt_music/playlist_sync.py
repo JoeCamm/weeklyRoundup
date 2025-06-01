@@ -3,7 +3,14 @@ from dotenv import load_dotenv
 import os
 
 def get_ytmusic():
-    load_dotenv()  # Load from .env
+    # Load from .env only if not running on Railway
+    if os.getenv("RAILWAY_ENVIRONMENT") is None:
+        try:
+            from dotenv import load_dotenv
+            load_dotenv()
+        except ImportError:
+            raise ImportError("Missing 'python-dotenv")
+
     encoded_json = os.environ["BROWSER_JSON"]
     decoded_json = encoded_json.replace('\\"', '"').replace("\\n", "\n")
 
