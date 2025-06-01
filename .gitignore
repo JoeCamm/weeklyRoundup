@@ -1,3 +1,4 @@
 /auth
 /venv
 /yt_music/__pycache__
+.env

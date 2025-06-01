@@ -1,6 +1,16 @@
 from ytmusicapi import YTMusic
+from dotenv import load_dotenv
+import os
 
 def get_ytmusic():
+    load_dotenv()  # Load from .env
+    encoded_json = os.environ["BROWSER_JSON"]
+    decoded_json = encoded_json.replace('\\"', '"').replace("\\n", "\n")
+
+    os.makedirs("auth", exist_ok=True)
+    with open("auth/browser.json", "w", encoding="utf-8") as f:
+        f.write(decoded_json)
+
     return YTMusic("auth/browser.json")
 
 import re
