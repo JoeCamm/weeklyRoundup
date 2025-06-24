@@ -13,6 +13,7 @@ def get_latest_roundup(channel_url):
         'extract_flat': True,
         'playlistend': 10,
         'force_generic_extractor': True,
+        'cookies': cookie_path,
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -90,8 +91,11 @@ def extract_all_video_ids(description: str) -> List[str]:
 
         
 def extract_video_ids_from_description(video_url):
+    cookie_path = write_cookies_file_from_env()
+
     ydl_opts = {
-        'quiet': True
+        'quiet': True,
+        'cookies': cookie_path
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
