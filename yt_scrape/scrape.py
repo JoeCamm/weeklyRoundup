@@ -1,9 +1,13 @@
 import yt_dlp
 import re
+import os
+import base64
 from typing import List
 
 
 def get_latest_roundup(channel_url):
+    cookie_path = write_cookies_file_from_env()
+    
     ydl_opts = {
         'quiet': True,
         'extract_flat': True,
@@ -97,3 +101,17 @@ def extract_video_ids_from_description(video_url):
         # Extract links from the description
         video_ids = extract_all_video_ids(description)
         return video_ids
+    
+
+    # utils/fileio.py
+
+def write_cookies_file_from_env(env_var="COOKIES_B64", filepath="auth/cookies.txt"):
+    cookies = os.getenv(env_var)
+    if not cookies:
+        raise ValueError("Missing COOKIES_B64 environment variable")
+
+    os.makedirs(os.path.dirname(filepath), exist_ok=True)
+    with open(filepath, "w", encoding="utf-8") as f:
+        f.write(base64.b64decode(cookies).decode("utf-8"))
+
+    return filepath
