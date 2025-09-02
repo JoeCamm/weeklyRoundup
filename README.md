@@ -1,4 +1,4 @@
-# Weekly Roundup Bot 🎵
+# Weekly Roundup Bot
 
 Automatically sync songs from TheNeedleDrop's weekly music roundup videos to your YouTube Music playlist. Tracks are ordered worst to best. I deploy this on Railway using a CRON schedule so it automatically updates.
 
