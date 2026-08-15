@@ -1,4 +1,5 @@
 /auth
 /venv
-/yt_music/__pycache__
+__pycache__/
 .env
+/auth_local

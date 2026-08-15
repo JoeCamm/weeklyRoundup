@@ -1,16 +1,16 @@
-from ytmusicapi import YTMusic
-from dotenv import load_dotenv
 import os
+import time
+
+from dotenv import load_dotenv
+from ytmusicapi import YTMusic
+from ytmusicapi.exceptions import YTMusicServerError
 
 def get_ytmusic():
-    # Load from .env only if not running on Railway
+    # Local mode: use browser.json directly from project root
     if os.getenv("RAILWAY_ENVIRONMENT") is None:
-        try:
-            from dotenv import load_dotenv
-            load_dotenv()
-        except ImportError:
-            raise ImportError("Missing 'python-dotenv")
+        return YTMusic("auth/browser.json")
 
+    # Railway mode: decode BROWSER_JSON env var
     encoded_json = os.environ["BROWSER_JSON"]
     decoded_json = encoded_json.replace('\\"', '"').replace("\\n", "\n")
 
@@ -85,8 +85,17 @@ def add_songs_to_playlist(ytmusic: YTMusic, playlist_id: str, video_ids: list):
 
             # Step 3: Add the songs to the playlist
             print(f"🎵 Adding track: {title} by {artist}")
-            ytmusic.add_playlist_items(playlist_id, [song_id])
-            
+            # YouTube Music intermittently 409s on rapid successive playlist edits
+            for attempt in range(3):
+                try:
+                    ytmusic.add_playlist_items(playlist_id, [song_id])
+                    break
+                except YTMusicServerError:
+                    if attempt == 2:
+                        raise
+                    time.sleep(2 * (attempt + 1))
+            time.sleep(1)
+
         else:
             print(f"No matching song found for: {query}")
 

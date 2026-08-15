@@ -11,20 +11,30 @@ Responsibilities:
 """
 
 import logging
-from yt_scrape.scrape import get_latest_roundup, extract_video_ids_from_description
-from utils.fileio import save_video_ids, load_previous_video_id
-from yt_music.playlist_sync import get_ytmusic, clear_playlist, add_songs_to_playlist, update_playlist_description
+
+from dotenv import load_dotenv
+from utils.fileio import load_previous_video_id, save_video_ids
+from yt_music.playlist_sync import (
+    add_songs_to_playlist,
+    clear_playlist,
+    get_ytmusic,
+    update_playlist_description,
+)
+from yt_scrape.scrape import extract_video_ids_from_description, get_latest_roundup
 
 # ---------- SETUP ----------
+
+load_dotenv()
 
 CHANNEL_URL = "https://www.youtube.com/@theneedledrop"
 CACHE_FILE = "data/last_video.txt"
 OUTPUT_FILE = "data/video_IDs.txt"
-OUTPUT_PLAYLIST_ID = 'PLCbOev5SuUoliQ8OO-wbjBjglLnfm0FBX'
+OUTPUT_PLAYLIST_ID = "PLCbOev5SuUoliQ8OO-wbjBjglLnfm0FBX"
 
 logging.basicConfig(level=logging.INFO)
 
 # ---------- MAIN ----------
+
 
 def main():
     yt_music = get_ytmusic()  # Initialize YT Music API client]
@@ -58,6 +68,7 @@ def main():
         f.write(latest_roundup["id"])
 
     logging.info("✅ Done.")
+
 
 # ---------- ENTRY POINT ----------
 
